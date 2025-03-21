@@ -16,7 +16,7 @@ import java.time.LocalDate;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class BaseModel {
     @Id
-    ObjectId id;
+    ObjectId id = new ObjectId();
     LocalDate createdDate = LocalDate.now();
     LocalDate modifiedDate = LocalDate.now();
 }
