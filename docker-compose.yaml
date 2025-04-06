@@ -1,0 +1,75 @@
+version: '3.8'
+
+services:
+  spring-app:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    container_name: recipe-dish-radar
+    ports:
+      - "8080:8080"
+    environment:
+      # Application & Server configs
+      - SPRING_APPLICATION_NAME=recipedishradar.com
+      - SERVER_PORT=8080
+      - API_BASE_URL=/api/v1
+      - SERVER_ACCOUNT_ADMIN=admin@recipedishradar.com
+
+      # Database configs
+      - SPRING_DATA_MONGODB_URI=mongodb://localhost:27017/RecipeDishRadar
+
+      # Redis configs
+      - SPRING_DATA_REDIS_HOST=${SPRING_DATA_REDIS_HOST}
+      - SPRING_DATA_REDIS_PORT=${SPRING_DATA_REDIS_PORT}
+
+      # JWT configs
+      - JWT_JWT_SIGNATURE_KEY=${JWT_SIGNATURE_KEY}
+      - JWT_ACCESSIBLE_DURATION=60
+      - JWT_REFRESHABLE_DURATION=2
+      - JWT_ACCESSIBLE_DURATION_TYPE=MINUTES
+      - JWT_REFRESHABLE_DURATION_TYPE=DAYS
+
+      # Cloudinary configs
+      - CLOUDINARY_CLOUD_NAME=${CLOUDINARY_CLOUD_NAME}
+      - CLOUDINARY_API_KEY=${CLOUDINARY_API_KEY}
+      - CLOUDINARY_API_SECRET=${CLOUDINARY_API_SECRET}
+
+      # Mail configs
+      - SPRING_MAIL_HOST=${SPRING_MAIL_HOST}
+      - SPRING_MAIL_PORT=${SPRING_MAIL_PORT}
+      - SPRING_MAIL_USERNAME=${SPRING_MAIL_USERNAME}
+      - SPRING_MAIL_PASSWORD=${SPRING_MAIL_PASSWORD}
+
+      # Java options
+      - JAVA_OPTS=-Xms256m -Xmx512m
+      - SPRING_PROFILES_ACTIVE=prod
+
+    depends_on:
+      redis:
+        condition: service_started
+    networks:
+      - app-network
+
+  redis:
+    image: redis:latest
+    container_name: recipedishradar_redis_server
+    ports:
+      - "6379:6379"
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis_data:/var/lib/redis/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  redis_data:
+    driver: local
