@@ -16,7 +16,7 @@ services:
       - SERVER_ACCOUNT_ADMIN=admin@recipedishradar.com
 
       # Database configs
-      - SPRING_DATA_MONGODB_URI=mongodb://localhost:27017/RecipeDishRadar
+      - MONGODB_URI=${MONGODB_URI}
 
       # Redis configs
       - SPRING_DATA_REDIS_HOST=${SPRING_DATA_REDIS_HOST}
