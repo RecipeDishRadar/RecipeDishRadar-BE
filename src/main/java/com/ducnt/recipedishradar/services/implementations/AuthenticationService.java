@@ -24,7 +24,7 @@ import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,6 +44,7 @@ public class AuthenticationService implements com.ducnt.recipedishradar.services
     ModelMapper modelMapper;
     IRedisService redisService;
     IEmailService emailService;
+    PasswordEncoder passwordEncoder;
 
     @NonFinal
     @Value("${jwt.jwt-signature-key}")
@@ -80,7 +81,7 @@ public class AuthenticationService implements com.ducnt.recipedishradar.services
         if (account.getStatus().equals(AccountStatus.INACTIVE)) {
             throw new CustomException(ErrorResponse.ACCOUNT_IS_INACTIVE);
         }
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
         boolean isAuthenticated = passwordEncoder.matches(request.getPassword(), account.getPassword());
         if (!isAuthenticated) {
             throw new CustomException(ErrorResponse.UNAUTHENTICATED);
@@ -112,7 +113,7 @@ public class AuthenticationService implements com.ducnt.recipedishradar.services
         }
     }
 
-    private String generateAccessToken(Account account) {
+    public String generateAccessToken(Account account) {
         JWSHeader jwsHeader = new JWSHeader(JWSAlgorithm.HS512);
 
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
@@ -130,7 +131,7 @@ public class AuthenticationService implements com.ducnt.recipedishradar.services
         return getTokenString(jwsHeader, jwtClaimsSet);
     }
 
-    private String generateRefreshToken(Account account) {
+    public String generateRefreshToken(Account account) {
         JWSHeader jwsHeader = new JWSHeader(JWSAlgorithm.HS512);
 
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
@@ -169,7 +170,7 @@ public class AuthenticationService implements com.ducnt.recipedishradar.services
                 throw new ExistedException("Email is existed");
 
             Account account = modelMapper.map(request, Account.class);
-            PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+
             account.setPassword(passwordEncoder.encode(request.getPassword()));
             account.setRole(AccountRole.USER);
             account.setStatus(AccountStatus.NOT_VERIFIED);

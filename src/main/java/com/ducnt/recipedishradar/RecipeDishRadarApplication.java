@@ -16,6 +16,8 @@ public class RecipeDishRadarApplication {
 //        System.setProperty("CLOUDINARY_API_KEY", dotenv.get("CLOUDINARY_API_KEY"));
 //        System.setProperty("CLOUDINARY_API_SECRET", dotenv.get("CLOUDINARY_API_SECRET"));
 
+        System.setProperty("MONGODB_URI", dotenv.get("MONGODB_URI"));
+
         System.setProperty("SPRING_MAIL_HOST", dotenv.get("SPRING_MAIL_HOST"));
         System.setProperty("SPRING_MAIL_PORT", dotenv.get("SPRING_MAIL_PORT"));
         System.setProperty("SPRING_MAIL_PROTOCOL", dotenv.get("SPRING_MAIL_PROTOCOL"));
