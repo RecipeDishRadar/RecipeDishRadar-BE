@@ -24,6 +24,7 @@ public enum ErrorResponse {
     /** ERROR RESPONSE FOR FILE **/
     FILE_OVER_SIZE("Max file size is {min} MB", HttpStatus.BAD_REQUEST),
     IMAGE_FILE_INVALID("Only jpg, png, gif, bmp files are allowed or not empty file", HttpStatus.BAD_REQUEST),
+    IO_FILE_INVALID("File is not an I/O file", HttpStatus.BAD_REQUEST),
 
     /** COMMON ERROR RESPONSE **/
     BAD_REQUEST("Invalid request", HttpStatus.BAD_REQUEST),
