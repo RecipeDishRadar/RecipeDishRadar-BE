@@ -30,10 +30,12 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class SecurityConfig {
 
-    String[] PUBLIC_ENDPOINTS = {
-            "/api/v1/accounts/myInfo", "/api/v1/login", "/api/v1/logout", "/api/v1/refresh", "/api/v1/register", "/api/v1/verify",
-            "/api/v1/menus", "/api/v1/menu/*",
-    };
+//    String[] PUBLIC_ENDPOINTS = {
+//            "/api/v1/accounts/myInfo", "/api/v1/login", "/api/v1/logout", "/api/v1/refresh", "/api/v1/register", "/api/v1/verify",
+//            "/api/v1/menus", "/api/v1/menu/*",
+//    };
+
+    String PUBLIC_ENDPOINTS = "/api/v1/**";
     CustomJwtDecoder customJwtDecoder;
 
     @Bean
